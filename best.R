@@ -26,8 +26,8 @@ best <- function(state, outcome) {
     #Find Best Hospital for Outcome
     state_match <- which(data$state==state)
     relev_states <- data[state_match, ]
-    ratings <- order(relev_states[, outcome])
-    best <- ratings[1]
-    output <- relev_states[best, "name"]
+    ratings <- order(as.numeric(relev_states[, outcome]))
+    first <- ratings[1]
+    output <- relev_states[first,'name']
     return(output)
 }
