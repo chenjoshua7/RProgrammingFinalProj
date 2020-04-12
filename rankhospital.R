@@ -29,12 +29,14 @@ rankhospital <- function(state, outcome, num = "best") {
     #Create filtered list for desired state
     state_match <- which(data$state==state)
     relev_states <- data[state_match, ]
-
+    relev_states <- relev_states[!is.na(as.numeric(relev_states[, outcome])), ]
+    
     #organize by outcome and add rank column
-    ratings <- order(as.numeric(relev_states[, outcome]))
+    list <- as.numeric(relev_states[, outcome])
+    ratings <- rank(list, ties.method = "last")
     n <- length(ratings)
     x <- 1
-    ordered_data<-as.data.frame(matrix(nrow = n, ncol = 5))
+    ordered_data<-as.data.frame(matrix(nrow = n, ncol = 6))
     
     for (i in ratings) {
         ordered_data[i, ] <- relev_states[x, ]
@@ -44,16 +46,12 @@ rankhospital <- function(state, outcome, num = "best") {
     ordered_data <- cbind(ordered_data, 1:n)
     colnames(ordered_data) <- c(colnames(relev_states), "Rank")
     
-    #remove NA for outcome
-    filter <- which(is.na(as.numeric(relev_states[, outcome])))
-    z <- length(filter)
-    
     #calling by rank, including error message
     if (num == "best") {
         num <- 1
     }
     if (num == "worst") {
-        num <- n - z
+        num <- n
     }
 
     output <- ordered_data[num,'name']

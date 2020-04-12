@@ -12,11 +12,14 @@ rankall <- function(outcome, num = 'best') {
     colnames(data) <- c("name", "states")
     unique_states <- unique(data$states)
     answer <- data.frame(matrix(nrow = 0, ncol = 2))
+    colnames(answer) <- c("hospital", "state")
     
     for (x in unique_states) {
         result <- rankhospital(state = x, outcome = outcome, num = num)
         addition <- matrix(c(result, x), nrow = 1, ncol = 2)
         answer <- rbind(answer,addition)
     }
+    colnames(answer) <- c("hospital", "state")
+    
     return(answer)
 }
